@@ -14,6 +14,10 @@ import java.util.Map;
 public class JsonUtil {
     private static ObjectMapper mapper;
 
+    public static ObjectMapper getMapper() {
+        return mapper;
+    }
+
     public static void setMapper(ObjectMapper mapper) {
         JsonUtil.mapper = mapper;
     }

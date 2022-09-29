@@ -32,16 +32,11 @@ import java.util.Optional;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     public static final String SECRET = "SECRET_KEY";
     public static final long EXPIRATION_TIME = 900_000; // 15 mins
-    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String TOKEN_PREFIX = "Bearer_";
     public static final String HEADER_STRING = "Authorization";
-    public static final String SIGN_UP_URL = "/api/services/controller/user";
-   // private UserDetailsServiceImpl userDetailsService;
-   // private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public static final String SIGN_UP_URL = "/api/authentication";
+
     private final UserRepository userRepository;
-  /*  public WebSecurity(UserDetailsServiceImpl userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userDetailsService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }*/
 
     @Autowired
     private void setMapper(ObjectMapper objectMapper) {
@@ -55,9 +50,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return super.userDetailsServiceBean();
     }
 
+ /*   @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }*/
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().authorizeRequests()
+        // Enable CORS and disable CSRF
+        http.cors().and().csrf().disable();
+        // Set permissions on endpoints
+        http.authorizeRequests()
+        //http.cors().and().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -67,9 +72,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
- /*   @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+ /*   @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(UserUtil.PASSWORD_ENCODER);
     }*/
 
     @Autowired
@@ -87,10 +92,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
         CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
         source.registerCorsConfiguration("/**", corsConfiguration);
-
         return source;
     }
 }

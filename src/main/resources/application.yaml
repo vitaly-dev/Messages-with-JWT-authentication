@@ -53,5 +53,6 @@ server.servlet:
     enabled: true # Enable http encoding support
     force: true
 
+#Tomcat server port. Default 8080
 server:
   port: 8081

@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter;
                 version = "1.0",
                 description = """
                         Spring Boot-based application with JWT user auth
-                        <p><b>Test credentials:</b><br>
+                        <p><b>Test credentials consist from: name(user Email), password(user password):</b><br>
                         - user@yandex.ru / password<br>
                         - admin@gmail.com / admin<br>
                         - guest@gmail.com / guest</p>
