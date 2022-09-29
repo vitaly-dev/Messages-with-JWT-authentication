@@ -7,6 +7,7 @@ import com.github.vitalydev.messages.web.AbstractControllerTest;
 import com.github.vitalydev.messages.web.user.UserTestData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
@@ -17,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.github.vitalydev.messages.web.message.MessageTestData.*;
-import static com.github.vitalydev.messages.web.user.UserTestData.ADMIN_MAIL;
-import static com.github.vitalydev.messages.web.user.UserTestData.USER_MAIL;
+import static com.github.vitalydev.messages.web.user.UserTestData.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,25 +33,26 @@ class MessageControllerTest extends AbstractControllerTest {
     private MessagesRepository messagesRepository;
 
     @Test
-    @WithUserDetails(value = USER_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_MESSAGE_1_ID).secure(true)
+                .header(HttpHeaders.AUTHORIZATION, token(admin)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(MESSAGE_1));
+                .andExpect(MEAL_MATCHER.contentJson(ADMIN_MESSAGE_1));
     }
 
     @Test
     void getUnauth() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + MESSAGE_1_ID))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_MEAL_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_MESSAGE_1_ID))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -59,34 +60,34 @@ class MessageControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + MEAL1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + MESSAGE_1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(messagesRepository.get(MEAL1_ID, UserTestData.USER_ID).isPresent());
+        assertFalse(messagesRepository.get(MESSAGE_1_ID, UserTestData.USER_ID).isPresent());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void deleteDataConflict() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + ADMIN_MEAL_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + ADMIN_MESSAGE_1_ID))
                 .andExpect(status().isConflict());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
-        Message updated = getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        Message updated = MessageTestData.getUpdated();
+        perform(MockMvcRequestBuilders.put(REST_URL + MESSAGE_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(messagesRepository.getById(MEAL1_ID), updated);
+        MEAL_MATCHER.assertMatch(messagesRepository.getById(MESSAGE_1_ID), updated);
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void createWithLocation() throws Exception {
-        Message newMessage = getNew();
+        Message newMessage = MessageTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMessage)));
@@ -141,8 +142,8 @@ class MessageControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateInvalid() throws Exception {
-        Message invalid = new Message(MEAL1_ID, null, null);
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        Message invalid = new Message(MESSAGE_1_ID, null, null);
+        perform(MockMvcRequestBuilders.put(REST_URL + MESSAGE_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -152,8 +153,8 @@ class MessageControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateHtmlUnsafe() throws Exception {
-        Message invalid = new Message(MEAL1_ID, LocalDateTime.now(), "<script>alert(123)</script>");
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        Message invalid = new Message(MESSAGE_1_ID, LocalDateTime.now(), "<script>alert(123)</script>");
+        perform(MockMvcRequestBuilders.put(REST_URL + MESSAGE_1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -164,9 +165,9 @@ class MessageControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = USER_MAIL)
     void updateDuplicate() {
-        Message invalid = new Message(MEAL1_ID, MESSAGE_2.getDateTime(), "Dummy");
+        Message invalid = new Message(MESSAGE_1_ID, MESSAGE_2.getDateTime(), "Dummy");
         assertThrows(Exception.class, () ->
-                perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+                perform(MockMvcRequestBuilders.put(REST_URL + MESSAGE_1_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(invalid)))
                         .andDo(print())

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,10 +20,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Configuration
@@ -31,11 +34,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     public static final String SECRET = "SECRET_KEY";
-    public static final long EXPIRATION_TIME = 900_000; // 15 mins
-    public static final String TOKEN_PREFIX = "Bearer_";
+    public static final long EXPIRATION_TIME = 900000_000; // 15 mins
+    public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String SIGN_UP_URL = "/api/authentication";
 
+    @Autowired
     private final UserRepository userRepository;
 
     @Autowired
@@ -43,33 +47,52 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         JsonUtil.setMapper(objectMapper);
     }
 
-    @Bean
+
+    @Bean("userDetailsServiceBean")
     @Override
     // https://stackoverflow.com/a/70176629/548473
     public UserDetailsService userDetailsServiceBean() throws Exception {
         return super.userDetailsServiceBean();
     }
 
- /*   @Override
+    @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }*/
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Enable CORS and disable CSRF
         http.cors().and().csrf().disable();
+
+        // Set unauthorized requests exception handler
+        http = http
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    ex.getMessage()
+                            );
+                        }
+                )
+                .and();
+
         // Set permissions on endpoints
         http.authorizeRequests()
-        //http.cors().and().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.POST, SIGN_UP_URL + "/**").permitAll()
+                //.anyRequest().authenticated()
+                .antMatchers("/api/**").authenticated()
+
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                //.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                //.addFilter(new JWTAuthorizationFilter())
+                .addFilterBefore(new JWTAuthorizationFilter(authenticationManagerBean(), userDetailsServiceBean())
+                        , UsernamePasswordAuthenticationFilter.class)
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
 
  /*   @Override

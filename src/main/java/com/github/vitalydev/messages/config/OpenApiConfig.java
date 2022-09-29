@@ -19,15 +19,19 @@ import java.time.format.DateTimeFormatter;
 //https://sabljakovich.medium.com/adding-basic-auth-authorization-option-to-openapi-swagger-documentation-java-spring-95abbede27e9
 @SecurityScheme(
         name = "basicAuth",
+        // name = "basicAuth",
         type = SecuritySchemeType.HTTP,
-        scheme = "basic"
+        //scheme = "basic"
+        scheme = "bearer",
+        bearerFormat = "JWT"
+
 )
 @OpenAPIDefinition(
         info = @Info(
                 title = "REST API documentation",
                 version = "1.0",
                 description = """
-                        Spring Boot-based application with JWT user auth
+                        Spring Boot-based application with JWT user authentication
                         <p><b>Test credentials consist from: name(user Email), password(user password):</b><br>
                         - user@yandex.ru / password<br>
                         - admin@gmail.com / admin<br>

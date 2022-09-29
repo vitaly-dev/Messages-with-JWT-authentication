@@ -29,7 +29,7 @@ spring:
     username: sa
     password:
 
-# Jackson Serialization Issue Resolver
+  # Jackson Serialization Issue Resolver
   jackson.visibility:
     field: any
     getter: none
@@ -53,6 +53,6 @@ server.servlet:
     enabled: true # Enable http encoding support
     force: true
 
-#Tomcat server port. Default 8080
+#Tomcat server port(default 8080)
 server:
   port: 8081

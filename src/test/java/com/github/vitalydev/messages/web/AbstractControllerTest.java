@@ -10,9 +10,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+
 import static com.github.vitalydev.messages.web.user.UserTestData.USER_MATCHER;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
 public abstract class AbstractControllerTest {
     private static final String REST_AUTH_URL = "/api/authentication";
-    private static final String TOKEN_TYPE = "Bearer_";
+    private static final String TOKEN_TYPE = "Bearer ";
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,6 +37,14 @@ public abstract class AbstractControllerTest {
     protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
     }
+/*    @PostConstruct
+    private void postConstruct() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .addFilter(CHARACTER_ENCODING_FILTER)
+                .apply(springSecurity())
+                .build();
+    }*/
 
     protected AuthenticationResponse login(AuthenticationRequest authRequest) throws Exception {
         ResultActions actions = mockMvc.perform(post(REST_AUTH_URL + "/login")

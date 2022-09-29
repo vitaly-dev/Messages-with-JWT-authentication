@@ -1,15 +1,14 @@
 package com.github.vitalydev.messages.util;
 
-import lombok.experimental.UtilityClass;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import com.github.vitalydev.messages.model.Role;
 import com.github.vitalydev.messages.model.User;
 import com.github.vitalydev.messages.to.UserTo;
+import lombok.experimental.UtilityClass;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @UtilityClass
 public class UserUtil {
-
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public static User createNewFromTo(UserTo userTo) {
