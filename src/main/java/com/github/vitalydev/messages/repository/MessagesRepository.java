@@ -14,7 +14,7 @@ public interface MessagesRepository extends BaseRepository<Message> {
     @Query(value = "SELECT * FROM Message m WHERE user_id=?1 ORDER BY date_time DESC LIMIT ?2 ", nativeQuery = true)
     List<Message> getLast(int userId, int num);
 
-    @Query("SELECT m FROM Message m WHERE m.id = :id and m.user.id = :userId")
+    @Query("SELECT m FROM Message m WHERE m.id = :id and m.userId = :userId")
     Optional<Message> get(int id, int userId);
 
     default Message checkBelong(int id, int userId) {

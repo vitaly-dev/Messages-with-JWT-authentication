@@ -18,7 +18,7 @@ public class MealService {
     private final UserRepository userRepository;
     private static final String HISTORY = "history";
 
-    @Transactional
+    //@Transactional
     public List<Message> saveOrGetLast(Message message, int userId) {
         String mess = message.getMessage();
         if (mess.contains(HISTORY)) {
@@ -26,7 +26,8 @@ public class MealService {
             int numMess = trimmedMess.length() > 0 ? Integer.parseInt(trimmedMess) : 0;
             return messagesRepository.getLast(userId, numMess);
         } else {
-            message.setUser(userRepository.getById(userId));
+            //message.setUser(userRepository.getById(userId));
+            message.setUserId(userId);
             message.setDateTime(LocalDateTime.now());
             List<Message> list = new ArrayList<>();
             list.add(messagesRepository.save(message));
