@@ -1,6 +1,8 @@
 package com.github.vitalydev.messages.web;
 
+import com.github.vitalydev.messages.config.WebSecurity;
 import com.github.vitalydev.messages.model.User;
+import com.github.vitalydev.messages.repository.UserRepository;
 import com.github.vitalydev.messages.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
+import static com.github.vitalydev.messages.config.WebSecurity.AUTH_URL;
 import static com.github.vitalydev.messages.web.user.UserTestData.USER_MATCHER;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,8 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
 public abstract class AbstractControllerTest {
-    private static final String REST_AUTH_URL = "/api/authentication";
     private static final String TOKEN_TYPE = "Bearer ";
+
+    @Autowired
+    public UserRepository userRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,7 +52,7 @@ public abstract class AbstractControllerTest {
     }*/
 
     protected AuthenticationResponse login(AuthenticationRequest authRequest) throws Exception {
-        ResultActions actions = mockMvc.perform(post(REST_AUTH_URL + "/login")
+        ResultActions actions = mockMvc.perform(post(AUTH_URL + "/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.writeValue(authRequest)))
                 .andDo(print())

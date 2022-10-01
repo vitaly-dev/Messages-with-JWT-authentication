@@ -37,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public static final long EXPIRATION_TIME = 900000_000; // 15 mins
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
-    public static final String SIGN_IN_URL = "/api/authentication";
+    public static final String AUTH_URL = "/api/authentication";
 
     @Autowired
     private final UserRepository userRepository;
@@ -48,7 +48,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
 
-    @Bean("userDetailsServiceBean")
+    @Bean//("userDetailsServiceBean")
     @Override
     // https://stackoverflow.com/a/70176629/548473
     public UserDetailsService userDetailsServiceBean() throws Exception {
@@ -81,7 +81,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_IN_URL + "/**").permitAll()
+                .antMatchers(HttpMethod.POST, AUTH_URL + "/**").permitAll()
                 //.anyRequest().authenticated()
                 .antMatchers("/api/**").authenticated()
 

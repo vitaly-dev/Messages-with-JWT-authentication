@@ -16,8 +16,13 @@ public abstract class AbstractUserController {
     @Autowired
     protected UserRepository repository;
 
+    @Autowired
+    private UniqueMailValidator emailValidator;
 
-
+    @InitBinder("user")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(emailValidator);
+    }
 
 /*
     public ResponseEntity<User> get(int id) {

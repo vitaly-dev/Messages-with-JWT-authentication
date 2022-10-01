@@ -1,14 +1,13 @@
 package com.github.vitalydev.messages.web.user;
 
+import com.github.vitalydev.messages.config.WebSecurity;
 import com.github.vitalydev.messages.model.User;
-import com.github.vitalydev.messages.repository.UserRepository;
 import com.github.vitalydev.messages.util.TokenUtil;
 import com.github.vitalydev.messages.util.UserUtil;
 import com.github.vitalydev.messages.web.AuthenticationRequest;
 import com.github.vitalydev.messages.web.AuthenticationResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,26 +24,22 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static com.github.vitalydev.messages.util.validation.ValidationUtil.checkNew;
-import static com.github.vitalydev.messages.web.user.ProfileController.REST_URL;
+import static com.github.vitalydev.messages.web.user.ProfileController.API_URL;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/authentication")
-public class AuthenticationController {//extends AbstractUserController{
+@RequestMapping(value = WebSecurity.AUTH_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+public class AuthenticationController extends AbstractUserController{
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    protected UserRepository repository;
-
-    @Autowired
-    @Qualifier(value = "userDetailsServiceBean")
+   // @Qualifier(value = "userDetailsServiceBean")
     private UserDetailsService userDetailsService;
 
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public AuthenticationResponse login(@RequestBody AuthenticationRequest authenticationRequest) {
-
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public AuthenticationResponse login(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getName(),
@@ -57,19 +52,15 @@ public class AuthenticationController {//extends AbstractUserController{
         return new AuthenticationResponse(token);
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody User userTo) {
         log.info("register {}", userTo);
         checkNew(userTo);
         User created = prepareAndSave(UserUtil.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL).build().toUri();
+                .path(API_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
-    }
-
-    protected User prepareAndSave(User user) {
-        return repository.save(UserUtil.prepareToSave(user));
     }
 
     @PostMapping(value = "/logout")
