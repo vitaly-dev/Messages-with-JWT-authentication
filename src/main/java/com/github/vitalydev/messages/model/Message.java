@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.github.vitalydev.messages.util.validation.NoHtml;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,14 +21,23 @@ import java.time.LocalTime;
 public class Message extends BaseEntity {
 
     @Column(name = "date_time", nullable = false)
-    @NotNull
+    @Schema(hidden = true)
+    //@NotNull
     private LocalDateTime dateTime;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 2, max = 120)
     @NoHtml
-    private String description;
+    private String name;
+
+    @Column(name = "message", nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 120)
+    @NoHtml
+    private String message;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -38,10 +45,10 @@ public class Message extends BaseEntity {
     @Schema(hidden = true)
     private User user;
 
-    public Message(Integer id, LocalDateTime dateTime, String description) {
+    public Message(Integer id, LocalDateTime dateTime, String message) {
         super(id);
         this.dateTime = dateTime;
-        this.description = description;
+        this.message = message;
     }
 
     public LocalDate getDate() {

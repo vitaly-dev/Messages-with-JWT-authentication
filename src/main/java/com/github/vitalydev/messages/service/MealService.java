@@ -7,15 +7,30 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class MealService {
     private final MessagesRepository messagesRepository;
     private final UserRepository userRepository;
+    private static final String HISTORY = "history";
 
     @Transactional
-    public Message save(Message message, int userId) {
-        message.setUser(userRepository.getById(userId));
-        return messagesRepository.save(message);
+    public List<Message> saveOrGetLast(Message message, int userId) {
+        String mess = message.getMessage();
+        if (mess.contains(HISTORY)) {
+            String trimmedMess = mess.replaceFirst(HISTORY, "").trim();
+            int numMess = trimmedMess.length() > 0 ? Integer.parseInt(trimmedMess) : 0;
+            return messagesRepository.getLast(userId, numMess);
+        } else {
+            message.setUser(userRepository.getById(userId));
+            message.setDateTime(LocalDateTime.now());
+            List<Message> list = new ArrayList<>();
+            list.add(messagesRepository.save(message));
+            return list;
+        }
     }
 }

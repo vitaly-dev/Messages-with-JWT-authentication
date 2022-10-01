@@ -15,6 +15,10 @@ public interface MessagesRepository extends BaseRepository<Message> {
     @Query("SELECT m FROM Message m WHERE m.user.id=:userId ORDER BY m.dateTime DESC")
     List<Message> getAll(int userId);
 
+
+    @Query(value = "SELECT * FROM Message m WHERE user_id=?1 ORDER BY date_time DESC LIMIT ?2 ", nativeQuery = true)
+    List<Message> getLast(int userId, int num);
+
     @Query("SELECT m from Message m WHERE m.user.id=:userId AND m.dateTime >= :startDate AND m.dateTime < :endDate ORDER BY m.dateTime DESC")
     List<Message> getBetweenHalfOpen(LocalDateTime startDate, LocalDateTime endDate, int userId);
 
