@@ -96,15 +96,4 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
-
-    @Test
-    @WithUserDetails(value = UserTestData.USER_MAIL)
-    void updateDuplicate() throws Exception {
-        UserTo updatedTo = new UserTo(null, "newName", UserTestData.ADMIN_MAIL, "newPassword");
-        perform(MockMvcRequestBuilders.put(ProfileController.REST_URL).contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedTo)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL)));
-    }
 }

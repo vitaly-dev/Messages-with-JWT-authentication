@@ -9,10 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -20,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AdminUserControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL = AdminUserController.REST_URL + '/';
+    private static final String REST_URL = ProfileController.REST_URL + '/';
 
     @Autowired
     private UserRepository userRepository;
@@ -154,19 +151,5 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .content(UserTestData.jsonWithPassword(updated, "password")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NEVER)
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void updateDuplicate() throws Exception {
-        User updated = new User(UserTestData.user);
-        updated.setEmail(UserTestData.ADMIN_MAIL);
-        perform(MockMvcRequestBuilders.put(REST_URL + UserTestData.USER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(UserTestData.jsonWithPassword(updated, "password")))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL)));
     }
 }

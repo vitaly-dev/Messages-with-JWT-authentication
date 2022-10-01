@@ -37,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public static final long EXPIRATION_TIME = 900000_000; // 15 mins
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
-    public static final String SIGN_UP_URL = "/api/authentication";
+    public static final String SIGN_IN_URL = "/api/authentication";
 
     @Autowired
     private final UserRepository userRepository;
@@ -81,7 +81,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL + "/**").permitAll()
+                .antMatchers(HttpMethod.POST, SIGN_IN_URL + "/**").permitAll()
                 //.anyRequest().authenticated()
                 .antMatchers("/api/**").authenticated()
 
