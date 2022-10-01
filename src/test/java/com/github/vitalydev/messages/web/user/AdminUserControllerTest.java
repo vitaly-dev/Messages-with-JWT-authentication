@@ -1,8 +1,8 @@
 package com.github.vitalydev.messages.web.user;
 
-import com.github.vitalydev.messages.model.Role;
 import com.github.vitalydev.messages.model.User;
 import com.github.vitalydev.messages.repository.UserRepository;
+import com.github.vitalydev.messages.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import com.github.vitalydev.messages.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -135,17 +134,6 @@ class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void createInvalid() throws Exception {
-        User invalid = new User(null, null, "", "newPass", Role.USER, Role.ADMIN);
-        perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(UserTestData.jsonWithPassword(invalid, "newPass")))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
     void updateInvalid() throws Exception {
         User invalid = new User(UserTestData.user);
         invalid.setName("");
@@ -177,19 +165,6 @@ class AdminUserControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL + UserTestData.USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(UserTestData.jsonWithPassword(updated, "password")))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL)));
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NEVER)
-    @WithUserDetails(value = UserTestData.ADMIN_MAIL)
-    void createDuplicate() throws Exception {
-        User expected = new User(null, "New", UserTestData.USER_MAIL, "newPass", Role.USER, Role.ADMIN);
-        perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(UserTestData.jsonWithPassword(expected, "newPass")))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString(UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL)));

@@ -1,16 +1,14 @@
 package com.github.vitalydev.messages.web.user;
 
-import com.github.vitalydev.messages.model.Role;
 import com.github.vitalydev.messages.model.User;
 import com.github.vitalydev.messages.util.JsonUtil;
 import com.github.vitalydev.messages.web.MatcherFactory;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static com.github.vitalydev.messages.web.message.MessageTestData.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTestData {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "messages", "password");

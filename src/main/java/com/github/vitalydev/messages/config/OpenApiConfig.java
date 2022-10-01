@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 //https://sabljakovich.medium.com/adding-basic-auth-authorization-option-to-openapi-swagger-documentation-java-spring-95abbede27e9
 @SecurityScheme(
-        name = "bearerAuth",
+        name = "basicAuth",
         type = SecuritySchemeType.HTTP,
         scheme = "bearer"
 )

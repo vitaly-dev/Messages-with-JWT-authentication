@@ -1,6 +1,5 @@
 package com.github.vitalydev.messages.util;
 
-import com.github.vitalydev.messages.model.Role;
 import com.github.vitalydev.messages.model.User;
 import com.github.vitalydev.messages.to.UserTo;
 import lombok.experimental.UtilityClass;
@@ -12,11 +11,11 @@ public class UserUtil {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public static User createNewFromTo(UserTo userTo) {
-        return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), Role.USER);
+        return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword());
     }
 
     public static User createNewFromTo(User userTo) {
-        return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), Role.USER);
+        return new User(null, userTo.getName(), userTo.getEmail().toLowerCase(), userTo.getPassword());
     }
 
     public static User updateFromTo(User user, User userTo) {

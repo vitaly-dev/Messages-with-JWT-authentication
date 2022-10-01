@@ -26,7 +26,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class MessageController {
-    static final String REST_URL = "/api/profile/messages";
+    static final String REST_URL = "/api/messages";
 
     private final MessagesRepository repository;
     private final MealService service;
@@ -43,12 +43,6 @@ public class MessageController {
         log.info("delete {} for user {}", id, authUser.id());
         Message message = repository.checkBelong(id, authUser.id());
         repository.delete(message);
-    }
-
-    @GetMapping
-    public List<Message> getAll(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("getAll for user {}", authUser.id());
-        return repository.getAll(authUser.id());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
