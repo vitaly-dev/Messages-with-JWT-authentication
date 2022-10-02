@@ -17,11 +17,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = MessageController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = MessageController.API_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 public class MessageController {
-    static final String REST_URL = "/api/messages";
+    static final String API_URL = "/api/messages";
 
     private final MessagesRepository repository;
     private final MealService service;

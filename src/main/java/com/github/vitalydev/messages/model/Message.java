@@ -1,6 +1,8 @@
 package com.github.vitalydev.messages.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.vitalydev.messages.util.validation.NoHtml;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -21,11 +23,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@ToString(callSuper = true, exclude = {"user"})
 public class Message extends BaseEntity {
 
     @Column(name = "date_time", nullable = false)
     @Schema(hidden = true)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private LocalDateTime dateTime;
 
     @Column(name = "name", nullable = false)
@@ -42,19 +44,19 @@ public class Message extends BaseEntity {
 
     @Column(name = "user_id", nullable = false)
     @Schema(hidden = true)
-    @JsonIgnore
-    private int userId;
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    //@JsonIgnore
+    private Integer userId;
 
-/*    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    //@JsonBackReference
-    @JsonIgnore
-    @Schema(hidden = true)
-    private User user;*/
+  /*  public Meal() {
+    }*/
 
-    public Message(Integer id, LocalDateTime dateTime, String message) {
+    public Message(Integer id, LocalDateTime dateTime, String message, String name, Integer userId) {
         super(id);
         this.dateTime = dateTime;
         this.message = message;
+        this.name = name;
+        this.userId = userId;
     }
 }

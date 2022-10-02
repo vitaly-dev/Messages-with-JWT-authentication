@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.vitalydev.messages.config.WebSecurity.AUTH_URL;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,14 +38,6 @@ public abstract class AbstractControllerTest {
     protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
     }
-/*    @PostConstruct
-    private void postConstruct() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .addFilter(CHARACTER_ENCODING_FILTER)
-                .apply(springSecurity())
-                .build();
-    }*/
 
     protected AuthenticationResponse login(AuthenticationRequest authRequest) throws Exception {
         ResultActions actions = mockMvc.perform(post(AUTH_URL + "/login")
@@ -54,7 +45,6 @@ public abstract class AbstractControllerTest {
                         .content(JsonUtil.writeValue(authRequest)))
                 .andDo(print())
                 .andExpect(status().isOk());
-       // return JsonUtil.readValue(TestUtil.getContent(actions), AuthenticationResponse.class);
         return JsonUtil.readValue(actions.andReturn().getResponse().getContentAsString(), AuthenticationResponse.class);
     }
 

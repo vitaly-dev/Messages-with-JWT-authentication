@@ -58,7 +58,7 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
     @Test
     void registerInvalid() throws Exception {
         UserTo newTo = new UserTo(null, null, "wrongEmail", null);
-        perform(MockMvcRequestBuilders.post(AUTH_URL+"/register")
+        perform(MockMvcRequestBuilders.post(AUTH_URL + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
