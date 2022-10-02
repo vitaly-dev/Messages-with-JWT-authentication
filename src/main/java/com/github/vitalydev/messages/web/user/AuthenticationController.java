@@ -2,6 +2,7 @@ package com.github.vitalydev.messages.web.user;
 
 import com.github.vitalydev.messages.config.WebSecurity;
 import com.github.vitalydev.messages.model.User;
+import com.github.vitalydev.messages.to.UserTo;
 import com.github.vitalydev.messages.util.TokenUtil;
 import com.github.vitalydev.messages.util.UserUtil;
 import com.github.vitalydev.messages.to.AuthenticationRequest;
@@ -54,7 +55,7 @@ public class AuthenticationController extends AbstractUserController{
 
     @PostMapping(value = "/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody User userTo) {
+    public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register {}", userTo);
         checkNew(userTo);
         User created = prepareAndSave(UserUtil.createNewFromTo(userTo));
@@ -63,8 +64,8 @@ public class AuthenticationController extends AbstractUserController{
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PostMapping(value = "/logout")
+  /*  @PostMapping(value = "/logout")
     public void logout() {
 
-    }
+    }*/
 }

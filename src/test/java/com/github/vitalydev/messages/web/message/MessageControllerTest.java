@@ -33,7 +33,6 @@ class MessageControllerTest extends AbstractControllerTest {
     private MessagesRepository messagesRepository;
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + ADMIN_MESSAGE_1_ID).secure(true)
                 .header(HttpHeaders.AUTHORIZATION, token(admin)))
@@ -97,35 +96,6 @@ class MessageControllerTest extends AbstractControllerTest {
         newMessage.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMessage);
         MEAL_MATCHER.assertMatch(messagesRepository.getById(newId), newMessage);
-    }
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(MESSAGES));
-    }
-
- /*   @Test
-    @WithUserDetails(value = USER_MAIL)
-    void getBetween() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filter")
-                .param("startDate", "2020-01-30").param("startTime", "07:00")
-                .param("endDate", "2020-01-31").param("endTime", "11:00"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(MEAL_MATCHER.contentJson(MESSAGE_5, MESSAGE_1));
-    }*/
-
-    @Test
-    @WithUserDetails(value = USER_MAIL)
-    void getBetweenAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDate=&endTime="))
-                .andExpect(status().isOk())
-                .andExpect(MEAL_MATCHER.contentJson(MESSAGES));
     }
 
     @Test

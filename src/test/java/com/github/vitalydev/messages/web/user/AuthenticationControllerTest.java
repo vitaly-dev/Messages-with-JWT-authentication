@@ -1,19 +1,19 @@
 package com.github.vitalydev.messages.web.user;
 
-import com.github.vitalydev.messages.config.WebSecurity;
 import com.github.vitalydev.messages.model.User;
+import com.github.vitalydev.messages.to.AuthenticationRequest;
+import com.github.vitalydev.messages.to.AuthenticationResponse;
 import com.github.vitalydev.messages.to.UserTo;
 import com.github.vitalydev.messages.util.JsonUtil;
 import com.github.vitalydev.messages.util.TokenUtil;
 import com.github.vitalydev.messages.util.UserUtil;
 import com.github.vitalydev.messages.web.AbstractControllerTest;
-import com.github.vitalydev.messages.to.AuthenticationRequest;
-import com.github.vitalydev.messages.to.AuthenticationResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.github.vitalydev.messages.config.WebSecurity.AUTH_URL;
 import static com.github.vitalydev.messages.web.user.UserTestData.admin;
 import static com.github.vitalydev.messages.web.user.UserTestData.user;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,9 +42,9 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
     void register() throws Exception {
         UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword");
         User newUser = UserUtil.createNewFromTo(newTo);
-        ResultActions action = perform(MockMvcRequestBuilders.post(WebSecurity.AUTH_URL + "/register")
+        ResultActions action = perform(MockMvcRequestBuilders.post(AUTH_URL + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newUser)))
+                .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
@@ -53,5 +53,15 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         newUser.setId(newId);
         UserTestData.USER_MATCHER.assertMatch(created, newUser);
         UserTestData.USER_MATCHER.assertMatch(userRepository.getById(newId), newUser);
+    }
+
+    @Test
+    void registerInvalid() throws Exception {
+        UserTo newTo = new UserTo(null, null, "wrongEmail", null);
+        perform(MockMvcRequestBuilders.post(AUTH_URL+"/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

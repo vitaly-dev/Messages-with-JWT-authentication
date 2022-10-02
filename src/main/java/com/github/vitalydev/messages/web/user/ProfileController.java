@@ -1,6 +1,7 @@
 package com.github.vitalydev.messages.web.user;
 
 import com.github.vitalydev.messages.model.User;
+import com.github.vitalydev.messages.to.UserTo;
 import com.github.vitalydev.messages.util.UserUtil;
 import com.github.vitalydev.messages.web.AuthUser;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class ProfileController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     @CacheEvict(allEntries = true)
-    public void update(@RequestBody @Valid User userTo, @AuthenticationPrincipal AuthUser authUser) {
+    public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         assureIdConsistent(userTo, authUser.id());
         User user = authUser.getUser();
         prepareAndSave(UserUtil.updateFromTo(user, userTo));
