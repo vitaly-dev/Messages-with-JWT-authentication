@@ -47,7 +47,7 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
 
-   // need for OnDeleteAction.CASCADE
+   // field 'messages' need for OnDeleteAction.CASCADE
     @OneToMany(fetch = FetchType.LAZY)//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     @OrderBy("dateTime DESC")

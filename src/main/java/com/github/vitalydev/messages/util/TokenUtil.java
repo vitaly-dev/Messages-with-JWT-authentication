@@ -6,8 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
@@ -49,7 +47,7 @@ public class TokenUtil {
         return new Date(System.currentTimeMillis() + EXPIRATION_TIME * 1000);
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getUserLoginNameFromToken(String token) {
         String username;
         try {
             final Claims claims = getClaimsFromToken(token);
@@ -72,7 +70,7 @@ public class TokenUtil {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         AuthUser user = (AuthUser) userDetails;
-        final String username = getUsernameFromToken(token);
+        final String username = getUserLoginNameFromToken(token);
         return (username.equals(user.getUsername()) && !(isTokenExpired(token)));
     }
 

@@ -1,4 +1,4 @@
-package com.github.vitalydev.messages.web;
+package com.github.vitalydev.messages.to;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

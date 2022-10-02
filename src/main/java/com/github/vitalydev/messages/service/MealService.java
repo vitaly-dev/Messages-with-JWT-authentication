@@ -5,7 +5,6 @@ import com.github.vitalydev.messages.repository.MessagesRepository;
 import com.github.vitalydev.messages.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,8 +13,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class MealService {
-    private final MessagesRepository messagesRepository;
-    private final UserRepository userRepository;
+    private final MessagesRepository messageRepository;
+    //private final UserRepository userRepository;
     private static final String HISTORY = "history";
 
     //@Transactional
@@ -24,13 +23,13 @@ public class MealService {
         if (mess.contains(HISTORY)) {
             String trimmedMess = mess.replaceFirst(HISTORY, "").trim();
             int numMess = trimmedMess.length() > 0 ? Integer.parseInt(trimmedMess) : 0;
-            return messagesRepository.getLast(userId, numMess);
+            return messageRepository.getLast(userId, numMess);
         } else {
             //message.setUser(userRepository.getById(userId));
             message.setUserId(userId);
             message.setDateTime(LocalDateTime.now());
             List<Message> list = new ArrayList<>();
-            list.add(messagesRepository.save(message));
+            list.add(messageRepository.save(message));
             return list;
         }
     }

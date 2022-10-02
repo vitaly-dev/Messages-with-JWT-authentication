@@ -1,4 +1,4 @@
-package com.github.vitalydev.messages.web;
+package com.github.vitalydev.messages.to;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class AuthenticationResponse implements Serializable {
         return token;
     }
 
-    public void setToken(String token) {
+  /*  public void setToken(String token) {
         this.token = token;
-    }
+    }*/
 }
