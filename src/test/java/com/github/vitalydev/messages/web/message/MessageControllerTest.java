@@ -1,7 +1,7 @@
 package com.github.vitalydev.messages.web.message;
 
 import com.github.vitalydev.messages.model.Message;
-import com.github.vitalydev.messages.repository.MessagesRepository;
+import com.github.vitalydev.messages.repository.MessageRepository;
 import com.github.vitalydev.messages.util.JsonUtil;
 import com.github.vitalydev.messages.web.AbstractControllerTest;
 import com.github.vitalydev.messages.web.user.UserTestData;
@@ -26,7 +26,7 @@ class MessageControllerTest extends AbstractControllerTest {
     private static final String API_URL = MessageController.API_URL + '/';
 
     @Autowired
-    private MessagesRepository messagesRepository;
+    private MessageRepository messageRepository;
 
     @Test
     void get() throws Exception {
@@ -57,7 +57,7 @@ class MessageControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(API_URL + MESSAGE_1_ID).secure(true)
                 .header(HttpHeaders.AUTHORIZATION, token(user)))
                 .andExpect(status().isNoContent());
-        assertFalse(messagesRepository.get(MESSAGE_1_ID, UserTestData.USER_ID).isPresent());
+        assertFalse(messageRepository.get(MESSAGE_1_ID, UserTestData.USER_ID).isPresent());
     }
 
     @Test
@@ -81,7 +81,7 @@ class MessageControllerTest extends AbstractControllerTest {
         newMessage.setId(newId);
         newMessage.setUserId(created.getUserId());
         MESSAGE_MATCHER.assertMatch(created, newMessage);
-        MESSAGE_MATCHER.assertMatch(messagesRepository.getById(newId), newMessage);
+        MESSAGE_MATCHER.assertMatch(messageRepository.getById(newId), newMessage);
     }
 
     @Test

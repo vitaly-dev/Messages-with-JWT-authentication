@@ -80,7 +80,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, AUTH_URL + "/**").permitAll()
+                .antMatchers(HttpMethod.POST, AUTH_URL + "/login").permitAll()
+                .antMatchers(AUTH_URL + "/register").anonymous()
                 .antMatchers("/api/**").authenticated()
                 .and()
                 // this filter can be used instead 'login' method in AuthenticationController.class

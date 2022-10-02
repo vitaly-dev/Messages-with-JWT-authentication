@@ -1,7 +1,7 @@
 package com.github.vitalydev.messages.service;
 
 import com.github.vitalydev.messages.model.Message;
-import com.github.vitalydev.messages.repository.MessagesRepository;
+import com.github.vitalydev.messages.repository.MessageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +11,8 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class MealService {
-    private final MessagesRepository messageRepository;
+public class MessageService {
+    private final MessageRepository messageRepository;
     private static final String HISTORY = "history";
 
     public List<Message> saveOrGetLast(Message message, int userId) {

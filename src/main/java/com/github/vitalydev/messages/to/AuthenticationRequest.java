@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class AuthenticationRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    // user login credentials consist from: name(user Email), password(user password)
     @Email
     @NotBlank
     @Size(min = 2, max = 128)

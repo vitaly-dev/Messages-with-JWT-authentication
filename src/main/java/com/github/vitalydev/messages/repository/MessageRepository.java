@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
-public interface MessagesRepository extends BaseRepository<Message> {
+public interface MessageRepository extends BaseRepository<Message> {
 
     @Query(value = "SELECT * FROM Message m WHERE user_id=?1 ORDER BY date_time DESC LIMIT ?2 ", nativeQuery = true)
     List<Message> getLast(int userId, int num);

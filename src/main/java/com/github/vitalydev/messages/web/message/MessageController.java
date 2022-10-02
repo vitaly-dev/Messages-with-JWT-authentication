@@ -1,8 +1,8 @@
 package com.github.vitalydev.messages.web.message;
 
 import com.github.vitalydev.messages.model.Message;
-import com.github.vitalydev.messages.repository.MessagesRepository;
-import com.github.vitalydev.messages.service.MealService;
+import com.github.vitalydev.messages.repository.MessageRepository;
+import com.github.vitalydev.messages.service.MessageService;
 import com.github.vitalydev.messages.util.validation.ValidationUtil;
 import com.github.vitalydev.messages.web.AuthUser;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ import java.util.List;
 public class MessageController {
     static final String API_URL = "/api/messages";
 
-    private final MessagesRepository repository;
-    private final MealService service;
+    private final MessageRepository repository;
+    private final MessageService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<Message> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
