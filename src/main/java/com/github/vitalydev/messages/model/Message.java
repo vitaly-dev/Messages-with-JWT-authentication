@@ -1,8 +1,6 @@
 package com.github.vitalydev.messages.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.vitalydev.messages.util.validation.NoHtml;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -19,7 +17,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "message", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
+@Table(name = "message", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "messages_unique_user_datetime_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -44,13 +42,8 @@ public class Message extends BaseEntity {
 
     @Column(name = "user_id", nullable = false)
     @Schema(hidden = true)
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    //@JsonIgnore
     private Integer userId;
-
-  /*  public Meal() {
-    }*/
 
     public Message(Integer id, LocalDateTime dateTime, String message, String name, Integer userId) {
         super(id);

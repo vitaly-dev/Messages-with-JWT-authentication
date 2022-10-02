@@ -4,11 +4,9 @@ import com.github.vitalydev.messages.HasIdAndEmail;
 import com.github.vitalydev.messages.util.validation.NoHtml;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Value

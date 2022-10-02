@@ -2,11 +2,11 @@ package com.github.vitalydev.messages.web.user;
 
 import com.github.vitalydev.messages.config.WebSecurity;
 import com.github.vitalydev.messages.model.User;
+import com.github.vitalydev.messages.to.AuthenticationRequest;
+import com.github.vitalydev.messages.to.AuthenticationResponse;
 import com.github.vitalydev.messages.to.UserTo;
 import com.github.vitalydev.messages.util.TokenUtil;
 import com.github.vitalydev.messages.util.UserUtil;
-import com.github.vitalydev.messages.to.AuthenticationRequest;
-import com.github.vitalydev.messages.to.AuthenticationResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,13 +30,12 @@ import static com.github.vitalydev.messages.web.user.ProfileController.API_URL;
 @Slf4j
 @RestController
 @RequestMapping(value = WebSecurity.AUTH_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
-public class AuthenticationController extends AbstractUserController{
+public class AuthenticationController extends AbstractUserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-   // @Qualifier(value = "userDetailsServiceBean")
     private UserDetailsService userDetailsService;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,9 +62,4 @@ public class AuthenticationController extends AbstractUserController{
                 .path(API_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
-
-  /*  @PostMapping(value = "/logout")
-    public void logout() {
-
-    }*/
 }

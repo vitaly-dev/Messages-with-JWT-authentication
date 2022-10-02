@@ -1,13 +1,13 @@
 package com.github.vitalydev.messages.web.user;
 
+import com.github.vitalydev.messages.HasIdAndEmail;
+import com.github.vitalydev.messages.repository.UserRepository;
 import com.github.vitalydev.messages.web.SecurityUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import com.github.vitalydev.messages.HasIdAndEmail;
-import com.github.vitalydev.messages.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 

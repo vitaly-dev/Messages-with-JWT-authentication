@@ -1,6 +1,7 @@
 package com.github.vitalydev.messages.config;
 
-// We can use this Filter instead of AuthenticationController /login Request method
+// We can use this Filter instead of 'login' Request method in AuthenticationController.class
+
 public class JWTAuthenticationFilter { //extends UsernamePasswordAuthenticationFilter {
 
    /* private AuthenticationManager authenticationManager;

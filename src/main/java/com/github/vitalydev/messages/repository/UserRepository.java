@@ -1,7 +1,6 @@
 package com.github.vitalydev.messages.repository;
 
 import com.github.vitalydev.messages.model.User;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 

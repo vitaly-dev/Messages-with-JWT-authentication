@@ -34,7 +34,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     public static final String SECRET = "SECRET_KEY";
-    public static final long EXPIRATION_TIME = 900000_000; // 15 mins
+    public static final long EXPIRATION_TIME = 900_000; // 15 mins
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String AUTH_URL = "/api/authentication";
@@ -47,8 +47,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         JsonUtil.setMapper(objectMapper);
     }
 
-
-    @Bean//("userDetailsServiceBean")
+    @Bean
     @Override
     // https://stackoverflow.com/a/70176629/548473
     public UserDetailsService userDetailsServiceBean() throws Exception {
@@ -82,23 +81,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         // Set permissions on endpoints
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, AUTH_URL + "/**").permitAll()
-                //.anyRequest().authenticated()
                 .antMatchers("/api/**").authenticated()
-
                 .and()
+                // this filter can be used instead 'login' method in AuthenticationController.class
                 //.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                //.addFilter(new JWTAuthorizationFilter())
                 .addFilterBefore(new JWTAuthorizationFilter(authenticationManagerBean(), userDetailsServiceBean())
                         , UsernamePasswordAuthenticationFilter.class)
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
-
- /*   @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(UserUtil.PASSWORD_ENCODER);
-    }*/
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

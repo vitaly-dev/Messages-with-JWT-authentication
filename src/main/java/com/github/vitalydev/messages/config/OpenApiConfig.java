@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
                 title = "REST API documentation",
                 version = "1.0",
                 description = """
-                        Spring Boot-based application with JWT user authentication
+                        Spring Boot-based application with JWT "bearer" scheme user authentication
                         <p><b>Test credentials consist from: name(user Email), password(user password):</b><br>
                         - user@yandex.ru / password<br>
                         - admin@gmail.com / admin<br>

@@ -1,10 +1,10 @@
 package com.github.vitalydev.messages.util.validation;
 
+import com.github.vitalydev.messages.HasId;
+import com.github.vitalydev.messages.error.IllegalRequestDataException;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
-import com.github.vitalydev.messages.HasId;
-import com.github.vitalydev.messages.error.IllegalRequestDataException;
 
 @UtilityClass
 public class ValidationUtil {

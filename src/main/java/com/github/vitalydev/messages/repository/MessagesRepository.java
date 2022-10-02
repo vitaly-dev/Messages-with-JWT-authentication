@@ -19,6 +19,6 @@ public interface MessagesRepository extends BaseRepository<Message> {
 
     default Message checkBelong(int id, int userId) {
         return get(id, userId).orElseThrow(
-                () -> new DataConflictException("Meal id=" + id + " doesn't belong to User id=" + userId));
+                () -> new DataConflictException("Message id=" + id + " doesn't belong to User id=" + userId));
     }
 }

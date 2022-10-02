@@ -1,9 +1,9 @@
 package com.github.vitalydev.messages.web;
 
+import com.github.vitalydev.messages.model.User;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import com.github.vitalydev.messages.model.User;
 
 import static java.util.Objects.requireNonNull;
 
